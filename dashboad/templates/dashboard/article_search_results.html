@@ -1,0 +1,29 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Search Results</title>
+</head>
+<body>
+    <h1>Search Results for "{{ query }}"</h1>
+    <h2>{{articles}}</h2>
+    <ul>
+    {% for article in articles %}
+        <li>
+            <h3>{{ article.title }}</h3>
+            <a href="{{ article.url }}" target="_blank">Read More</a>
+        </li>
+        
+    {% empty %}
+    
+        <li>No articles found.</li>
+    {% endfor %}
+    </ul>
+</body>
+</html>
+
+
+{% endblock %}

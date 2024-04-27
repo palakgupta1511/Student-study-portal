@@ -1,0 +1,66 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+{% block title %}
+  {{ category.title }} Questions
+{% endblock %}
+{% block content %}
+  <h3 align: "center" class="my-4">Category : <span class="text-primary">{{ category.title }} </span></h3>
+  <div class="card my-4 border-dark">
+    <h4 "card-header">{{question.question}} <span class="timer float-end"> </span></h4>
+    <form method="post" action={% url 'submit_answer' category.id question.id %}>
+      {% csrf_token %}
+    <div class="card-body border-dark">
+      <table class="table table-bordered border-dark">
+        <tr>
+          <td>
+            <input  id="option-1" value="{{question.opt_1}}" id="option_1" name="answer" type="radio" />
+          </td>
+          <th> <label for="option-1">{{question.opt_1}}</label></th>
+        </tr>
+        <tr>
+          <td>
+            <input id="option-2" name="answer" value="{{question.opt_2}}" id="option_2" type="radio" />
+          </td>
+          <th> <label for="option-2">{{question.opt_2}}</label></th>
+        </tr>
+        <tr>
+          <td>
+            <input  id="option-3" name="answer" value="{{question.opt_3}}" id="option_3" type="radio" />
+          </td>
+          <th> <label for="option-3">{{question.opt_3}}</label></th>
+        </tr>
+        <tr>
+          <td>
+            <input  id="option-4" name="answer" value="{{question.opt_4}}" id="option_4" type="radio" />
+          </td>
+          <th> <label for="option-4">{{question.opt_4}}</label></th>
+        </tr>
+      </table>
+    </div>
+    <div class="card-footer">
+      <input type="submit" name="skip" value="Skip" class="btn btn-warning skipBtn" />
+      <input type="submit" name="submit" value="Submit" class="btn btn-primary submitBtn"  />
+    </div>
+  </form>
+  </div>
+ <script type= "text/javascript" src="{% static 'jquery-3.5.1.js' %}"></script>
+ <script type= "text/javascript" src="{% static 'jQuery.countdownTimer-2.0.0/js/jQuery.countdownTimer.min.js' %}"></script>
+<script type= "text/Javascript">
+  $(document).ready(fucntion(){
+    $(".submitBtn").on('click',function(){
+      var _checkedAns = $("input[name='answer']:checked").val();
+      if(_checkedAns==undefined){
+        alert('please select option');
+        return false;
+      }
+    });
+    $(".timer").countdowntimer({
+      seconds: "{{question.time_limit}}",
+      size : "sm",
+      timeup:function(){
+         $(".skipBtn").trigger('click');
+      }
+    });
+  });
+</script>
+{% endblock %}

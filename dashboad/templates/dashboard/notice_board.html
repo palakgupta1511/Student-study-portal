@@ -1,0 +1,18 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+{% block title %}
+{% endblock %}
+{% block content %}
+<h2>Notice Board</h2>
+<ul>
+{% for notice in notices %}
+    <li class="card">
+        <h3>{{ notice.title }}</h3>
+        <p>{{ notice.content }}</p>
+        <p>Posted on: {{ notice.date_posted }}</p>
+    </li>
+{% empty %}
+    <li>No notices available.</li>
+{% endfor %}
+</ul>
+{% endblock %}

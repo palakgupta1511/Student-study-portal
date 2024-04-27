@@ -1,0 +1,12 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+{% block content %}
+<form action="<a href="{% url 'messaging_interface' recipient_id=recipient_id %}">Messaging Interface</a>
+    " method="post">
+    {% csrf_token %}
+    <label for="content">Message:</label><br>
+    <textarea id="content" name="content" rows="4" cols="50"></textarea><br>
+    <input type="submit" value="Send">
+</form>
+
+ {% endblock %}
