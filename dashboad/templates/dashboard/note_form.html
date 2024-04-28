@@ -1,0 +1,20 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% if form.instance.pk %}Edit Note{% else %}Create Note{% endif %}</title>
+</head>
+<body>
+    <h1>{% if form.instance.pk %}Edit Note{% else %}Create Note{% endif %}</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">{% if form.instance.pk %}Update{% else %}Create{% endif %}</button>
+        <a href="{% url 'note_list' %}">Cancel</a>
+    </form>
+</body>
+</html>
+{% endblock %}
