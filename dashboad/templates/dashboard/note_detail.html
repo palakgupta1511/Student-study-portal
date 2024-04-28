@@ -1,0 +1,29 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>{{ note.title }}</title>
+</head>
+<body>
+    <section class='text-center container'>
+        <div class="container">
+            <div class="content-section p-0 mt-5">
+                <div class="m-3">
+                    <h1>{{ note.title }}</h1>
+                    </div>
+                    <hr class="p-0 m-0">
+                    <p class="description m-5 p-5">
+                         {{ note.content }}
+                        </p>
+                         <hr>
+                        </div>
+                    </div>
+                </section>     
+    <a href="{% url 'note_update' note.id %}">Edit</a>
+    <a href="{% url 'note_delete' note.id %}">Delete</a>
+    <a href="{% url 'note_list' %}">Back to Notes List</a>
+</body>
+</html>
+{% endblock %}
