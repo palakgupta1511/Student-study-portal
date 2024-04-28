@@ -1,0 +1,20 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Confirm Note Deletion</title>
+    </head>
+    <body>
+        <h1>Confirm Note Deletion</h1>
+        <p>Are you sure you want to delete the note "{{ note.title }}"?</p>
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit">Delete</button>
+            <a href="{% url 'note_list' %}">Cancel</a>
+        </form>
+    </body>
+    </html>
+    {% endblock %}
