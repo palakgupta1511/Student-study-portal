@@ -15,7 +15,8 @@ from .models import QuizCategory
 from django.http import HttpResponse
 import random
 from bs4 import BeautifulSoup
-
+from django.http import JsonResponse 
+import openai 
 
 def home(request):
     return render(request,'dashboard/home.html')
@@ -24,51 +25,75 @@ def notice_board(request):
     notices = Notice.objects.all().order_by('-date_posted')
     return render(request, 'dashboard/notice_board.html', {'notices': notices})
 
+openai.api_key = 'YOUR_API_KEY'
+
+def get_completion(prompt): 
+    print(prompt) 
+    query = openai.Completion.create( 
+        # engine="text-davinci-003", 
+        # prompt=prompt, 
+        # max_tokens=1024, 
+        # n=1, 
+        # stop=None, 
+        temperature=0.5, 
+        model='gpt-3.5-turbo',
+        messages=[{"role": "user", "content": prompt }]
+    ) 
+    # response = query.choices[0].text 
+    response = query.get('choices')[0]['message']['content']
+    # print(response) 
+    return response 
+  
+  
+def chatbot(request): 
+    if request.method == 'POST': 
+        prompt = request.POST.get('prompt') 
+        response = get_completion(prompt) 
+        return JsonResponse({'response': response}) 
+    return render(request, 'dashboard/chatbot.html') 
+
+def notice_board(request):
+    notices = Notice.objects.all().order_by('-date_posted')
+    return render(request, 'dashboard/notice_board.html', {'notices': notices})
+
 @login_required
-def homework(request):
-    if request.method == "POST":
-        form = HomeworkForm(request.POST)
+def note_list(request):
+    notes = Note.objects.filter(owner=request.user)
+    return render(request, 'dashboard/note_list.html', {'notes': notes})
+
+def note_detail(request, note_id):
+    note = get_object_or_404(Note, id=note_id, owner=request.user)
+    return render(request, 'dashboard/note_detail.html', {'note': note})
+
+def note_create(request):
+    if request.method == 'POST':
+        form = NoteForm(request.POST)
         if form.is_valid():
-            try:
-                finished=request.POST['is_finished']
-                if finished == 'on':
-                    finished = True
-                else:
-                    finished = False 
-            except:
-                finished = False  
-            homeworks = Homework(
-                user = request.user,
-                subject= request.POST['subject'],
-                title= request.POST['title'],
-                description = request.POST['description'],
-                due= request.POST['due'],
-                is_finished= finished
-            )    
-            homeworks.save()
-            messages.success(request, f'Homework Added From {request.user.username}!!')         
-    else:        
-           form = HomeworkForm()
-    homework= Homework.objects.filter(user=request.user)
-    if len(homework) == 0:
-        homework_done = True
+            note = form.save(commit=False)
+            note.owner = request.user
+            note.save()
+            return redirect('note_list')
     else:
-        homework_done = False    
-    context = {'homeworks':homework,'homewroks_done':homework_done,'form':form,}
-    return render(request,'dashboard/homework.html',context)
-@login_required
-def update_homework(request,pk=None):
-    homework =  Homework.objects.get(id=pk)
-    if homework.is_finished == True :
-        homework.is_finished =  False
+        form = NoteForm()
+    return render(request, 'dashboard/note_form.html', {'form': form})
+
+def note_update(request, note_id):
+    note = get_object_or_404(Note, id=note_id, owner=request.user)
+    if request.method == 'POST':
+        form = NoteForm(request.POST, instance=note)
+        if form.is_valid():
+            form.save()
+            return redirect('note_list')
     else:
-        homework.is_finished= True   
-    homework.save()
-    return redirect('homework')    
-@login_required
-def delete_homework(request,pk=None):
-    Homework.objects.get(id=pk).delete()
-    return redirect("homework")
+        form = NoteForm(instance=note)
+    return render(request, 'dashboard/note_form.html', {'form': form})
+
+def note_delete(request, note_id):
+    note = get_object_or_404(Note, id=note_id, owner=request.user)
+    if request.method == 'POST':
+        note.delete()
+        return redirect('note_list')
+    return render(request, 'dashboard/note_confirm_delete.html', {'note': note})
 
 
 def youtube(request):
