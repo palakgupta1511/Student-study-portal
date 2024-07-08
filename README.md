@@ -1,7 +1,9 @@
 # STUDENT STUDY PORTAL 
 The "Student Study Portal" is an innovative online platform aimed at revolutionizing the learning 
 experience for students. It serves as a centralized hub where students can access a wide array of 
-educational tools and resources in one convenient location.
+educational tools and resources in one convenient location.The goal of the Student Study Portal is to help students do 
+well in their studies, collaborate with classmates, and have everything they need for learning right at 
+their fingertips.
 
 # Why this project is helpful?
 The objectives of the Student Study Portal are centered around improving the overall learning 
